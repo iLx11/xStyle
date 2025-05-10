@@ -1,0 +1,398 @@
+// 角内凹曲线
+@function angle_inner_curve($radius: 10px, $cropRadius: 10px, $pos: 0) {
+  $positions: if(type-of($pos) == list, $pos, ($pos));
+  $result: ();
+
+  @each $p in $positions {
+    @if $p == 0 {
+      $gradients: (
+        radial-gradient(
+            calc(2 * $radius)
+              circle
+              at
+              top
+              $radius
+              left
+              calc($cropRadius + 2 * $radius),
+            #000 50%,
+            #0000 51%
+          )
+          no-repeat,
+        radial-gradient(
+            calc(2 * $radius)
+              circle
+              at
+              top
+              calc($cropRadius + 2 * $radius)
+              left
+              $radius,
+            #000 50%,
+            #0000 51%
+          )
+          no-repeat,
+        conic-gradient(
+          from 0deg
+            at
+            left
+            calc($cropRadius + 2 * $radius)
+            top
+            calc($cropRadius + 2 * $radius),
+          #000 0% 75%,
+          #0000 0
+        ),
+        radial-gradient($cropRadius at top 0 left 0, #0000 99%, #000 101%)
+          left
+          $radius
+          top
+          $radius
+          no-repeat
+      );
+      $result: append($result, $gradients, comma);
+    } @else if $p == 1 {
+      $gradients: (
+        radial-gradient(
+            calc(2 * $radius)
+              circle
+              at
+              top
+              $radius
+              right
+              calc($cropRadius + 2 * $radius),
+            #000 50%,
+            #0000 51%
+          )
+          no-repeat,
+        radial-gradient(
+            calc(2 * $radius)
+              circle
+              at
+              top
+              calc($cropRadius + 2 * $radius)
+              right
+              $radius,
+            #000 50%,
+            #0000 51%
+          )
+          no-repeat,
+        conic-gradient(
+            from 0deg
+              at
+              right
+              calc($cropRadius + 2 * $radius)
+              top
+              calc($cropRadius + 2 * $radius),
+            #0000 0% 25%,
+            #000 0
+          )
+          no-repeat,
+        radial-gradient($cropRadius at top 0 right 0, #0000 99%, #000 101%)
+          right
+          $radius
+          top
+          $radius
+          no-repeat
+      );
+      $result: append($result, $gradients, comma);
+    } @else if $p == 2 {
+      $gradients: (
+        radial-gradient(
+            calc(2 * $radius)
+              circle
+              at
+              bottom
+              $radius
+              right
+              calc($cropRadius + 2 * $radius),
+            #000 50%,
+            #0000 51%
+          )
+          no-repeat,
+        radial-gradient(
+            calc(2 * $radius)
+              circle
+              at
+              bottom
+              calc($cropRadius + 2 * $radius)
+              right
+              $radius,
+            #000 50%,
+            #0000 51%
+          )
+          no-repeat,
+        conic-gradient(
+            from 90deg
+              at
+              right
+              calc($cropRadius + 2 * $radius)
+              bottom
+              calc($cropRadius + 2 * $radius),
+            #0000 0% 25%,
+            #000 0
+          )
+          no-repeat,
+        radial-gradient($cropRadius at bottom 0 right 0, #0000 99%, #000 101%)
+          right
+          $radius
+          bottom
+          $radius
+          no-repeat
+      );
+      $result: append($result, $gradients, comma);
+    } @else if $p == 3 {
+      $gradients: (
+        radial-gradient(
+            calc(2 * $radius)
+              circle
+              at
+              bottom
+              $radius
+              left
+              calc($cropRadius + 2 * $radius),
+            #000 50%,
+            #0000 51%
+          )
+          no-repeat,
+        radial-gradient(
+            calc(2 * $radius)
+              circle
+              at
+              bottom
+              calc($cropRadius + 2 * $radius)
+              left
+              $radius,
+            #000 50%,
+            #0000 51%
+          )
+          no-repeat,
+        conic-gradient(
+            from 180deg
+              at
+              left
+              calc($cropRadius + 2 * $radius)
+              bottom
+              calc($cropRadius + 2 * $radius),
+            #0000 0% 25%,
+            #000 0
+          )
+          no-repeat,
+        radial-gradient($cropRadius at bottom 0 left 0, #0000 99%, #000 101%)
+          left
+          $radius
+          bottom
+          $radius
+          no-repeat
+      );
+      $result: append($result, $gradients, comma);
+    }
+  }
+
+  @return $result;
+}
+
+/*
+  平面内凹曲线
+  参数名	类型	默认值	说明
+  $radius	Length	20px	主曲线半径
+  $cropRadius	Length	40px	裁剪区域半径
+  $position	Percentage	50%	曲线在边缘的位置（0%-100%）
+  $depth	Angle	30deg	立体深度角度（0-90度）
+  $corners	Number/List	0	需应用效果的角落编号（
+*/
+@function plane_inner_curve(
+  $radius: 20px,
+  $cropRadius: 40px,
+  $position: 50%,
+  $depth: 30deg,
+  $corners: 0
+) {
+  $d: ($cropRadius + $radius) * cos($depth);
+
+  $corner-list: if(type-of($corners) == list, $corners, ($corners));
+  $result: ();
+
+  @each $corner in $corner-list {
+    @if $corner == 0 {
+      $gradients: (
+        radial-gradient(
+            calc(2 * $radius) at left $position top $radius,
+            #000 50%,
+            #0000 51%
+          )
+          left
+          calc($position + $d)
+          top
+          0
+          no-repeat,
+        radial-gradient(
+            calc(2 * $radius) at left $position top $radius,
+            #000 50%,
+            #0000 51%
+          )
+          left
+          calc($position - $d)
+          top
+          0
+          no-repeat,
+        radial-gradient(
+            $cropRadius
+              at
+              left
+              $position
+              top
+              calc(-1 * sin($depth) * $cropRadius),
+            #0000 100%,
+            #000 calc(100% + 1px)
+          )
+          left
+          0
+          top
+          calc($radius * (1 - sin($depth)))
+          no-repeat,
+        linear-gradient(
+          90deg,
+          #000 calc($position - $d),
+          #0000 0 calc($position + $d),
+          #000 0
+        )
+      );
+      $result: append($result, $gradients, comma);
+    } @else if $corner == 1 {
+      $gradients: (
+        radial-gradient(
+            calc(2 * $radius) at top $position right $radius,
+            #000 50%,
+            #0000 51%
+          )
+          top
+          calc($position + $d)
+          right
+          0
+          no-repeat,
+        radial-gradient(
+            calc(2 * $radius) at top $position right $radius,
+            #000 50%,
+            #0000 51%
+          )
+          top
+          calc($position - $d)
+          right
+          0
+          no-repeat,
+        radial-gradient(
+            $cropRadius
+              at
+              top
+              $position
+              right
+              calc(-1 * sin($depth) * $cropRadius),
+            #0000 100%,
+            #000 calc(100% + 1px)
+          )
+          top
+          0
+          right
+          calc($radius * (1 - sin($depth)))
+          no-repeat,
+        linear-gradient(
+          180deg,
+          #000 calc($position - $d),
+          #0000 0 calc($position + $d),
+          #000 0
+        )
+      );
+      $result: append($result, $gradients, comma);
+    } @else if $corner == 2 {
+      $gradients: (
+        radial-gradient(
+            calc(2 * $radius) at left $position bottom $radius,
+            #000 50%,
+            #0000 51%
+          )
+          left
+          calc($position + $d)
+          bottom
+          0
+          no-repeat,
+        radial-gradient(
+            calc(2 * $radius) at left $position bottom $radius,
+            #000 50%,
+            #0000 51%
+          )
+          left
+          calc($position - $d)
+          bottom
+          0
+          no-repeat,
+        radial-gradient(
+            $cropRadius
+              at
+              left
+              $position
+              bottom
+              calc(-1 * sin($depth) * $cropRadius),
+            #0000 100%,
+            #000 calc(100% + 1px)
+          )
+          left
+          0
+          bottom
+          calc($radius * (1 - sin($depth)))
+          no-repeat,
+        linear-gradient(
+          90deg,
+          #000 calc($position - $d),
+          #0000 0 calc($position + $d),
+          #000 0
+        )
+      );
+      $result: append($result, $gradients, comma);
+    } @else if $corner == 3 {
+      $gradients: (
+        radial-gradient(
+            calc(2 * $radius) at top $position left $radius,
+            #000 50%,
+            #0000 51%
+          )
+          top
+          calc($position + $d)
+          left
+          0
+          no-repeat,
+        radial-gradient(
+            calc(2 * $radius) at top $position left $radius,
+            #000 50%,
+            #0000 51%
+          )
+          top
+          calc($position - $d)
+          left
+          0
+          no-repeat,
+        radial-gradient(
+            $cropRadius
+              at
+              top
+              $position
+              left
+              calc(-1 * sin($depth) * $cropRadius),
+            #0000 100%,
+            #000 calc(100% + 1px)
+          )
+          top
+          0
+          left
+          calc($radius * (1 - sin($depth)))
+          no-repeat,
+        linear-gradient(
+          180deg,
+          #000 calc($position - $d),
+          #0000 0 calc($position + $d),
+          #000 0
+        )
+      );
+      $result: append($result, $gradients, comma);
+    }
+  }
+
+  @return $result;
+}
