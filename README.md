@@ -1,3 +1,15 @@
+下载
+
+```cmd
+pnpm add ilx1-x-style -D
+
+#or
+
+npm i ilx1-x-style --save-dev
+```
+
+
+
 `vite.config.ts` 中配置
 
 ```ts

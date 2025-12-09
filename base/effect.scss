@@ -1,5 +1,5 @@
 // 角内凹曲线
-@function angle_inner_curve($radius: 10px, $cropRadius: 10px, $pos: 0) {
+@function angle-inner-curve($radius: 10px, $cropRadius: 10px, $pos: 0) {
   $positions: if(type-of($pos) == list, $pos, ($pos));
   $result: ();
 
@@ -198,7 +198,7 @@
   $depth	Angle	30deg	立体深度角度（0-90度）
   $corners	Number/List	0	需应用效果的角落编号（
 */
-@function plane_inner_curve(
+@function plane-inner-curve(
   $radius: 20px,
   $cropRadius: 40px,
   $position: 50%,

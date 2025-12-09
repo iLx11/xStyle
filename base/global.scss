@@ -1,68 +1,201 @@
+// 字体配置
+$font-family-primary: 'ceyy', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+  Roboto, 'Helvetica Neue', Arial, sans-serif !default;
+$font-size-base: 16px !default; // 基础字号
+$color-base: rgba(51, 51, 51, 1) !default;
+$font-weight-regular: 400 !default;
 
-/* 自定义滚动条 */
-@mixin custom_scrollbar(
-  $width: 10px,
-  $display: block,
-  $track-color: rgba(51, 51, 51, 0.1),
-  $thumb-color: rgba(51, 51, 51, 0.15),
-  $thumb-hover-color: rgba(51, 51, 51, 0.3)
+// 阴影
+$shadow1: 0px 2px 35px rgba(0, 0, 0, 0.07);
+
+// 层级
+$z-index-1: 100;
+$z-index-2: 200;
+$z-index-3: 300;
+$z-index-4: 400;
+$z-index-5: 500;
+/**
+ * 自定义滚动条（全浏览器兼容）
+ * @param {Boolean} $show - 是否显示，默认 true
+ * @param {Length} $width - 宽度，默认 $app-scrollbar-width
+ * @param {Color} $track-color - 轨道颜色，默认 $app-scrollbar-track-color
+ * @param {Color} $thumb-color - 滑块颜色，默认 $app-scrollbar-thumb-color
+ * @param {Color} $thumb-hover-color - 滑块 hover 颜色，默认 $app-scrollbar-thumb-hover-color
+ * @param {Length} $border-radius - 圆角，默认 $app-scrollbar-border-radius
+ */
+@mixin custom-scrollbar(
+  $show: true,
+  $width: $app-scrollbar-width,
+  $track-color: $app-scrollbar-track-color,
+  $thumb-color: $app-scrollbar-thumb-color,
+  $thumb-hover-color: $app-scrollbar-thumb-hover-color,
+  $border-radius: $app-scrollbar-border-radius
 ) {
-  scrollbar-width: auto; /* firefox */
-  &::-webkit-scrollbar {
-    width: $width;
-    display: $display;
-  }
+  @if $show {
+    // Firefox
+    scrollbar-width: thin;
+    scrollbar-color: $thumb-color $track-color;
 
-  &::-webkit-scrollbar-track {
-    background: $track-color;
-    border-radius: calc($width / 2);
-  }
+    // IE/Edge
+    -ms-overflow-style: auto;
 
-  &::-webkit-scrollbar-thumb {
-    background: $thumb-color;
-    border-radius: calc($width / 2);
-  }
+    // Webkit 内核（Chrome/Safari）
+    &::-webkit-scrollbar {
+      width: $width;
+      height: $width; // 横向滚动条宽度
+      display: block;
+    }
 
-  &::-webkit-scrollbar-thumb:hover {
-    background: $thumb-hover-color;
+    &::-webkit-scrollbar-track {
+      background: $track-color;
+      border-radius: $border-radius;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $thumb-color;
+      border-radius: $border-radius;
+      border: 2px solid transparent; // 增加内边距，更美观
+      background-clip: content-box;
+
+      // hover 效果
+      &:hover {
+        background: $thumb-hover-color;
+        background-clip: content-box;
+      }
+
+      // active 效果
+      &:active {
+        background: darken($thumb-hover-color, 5%);
+        background-clip: content-box;
+      }
+    }
+
+    // 滚动条角落
+    &::-webkit-scrollbar-corner {
+      background: $track-color;
+    }
+  } @else {
+    // 隐藏滚动条
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
+}
+
+@mixin comm-box() {
+  border-radius: 15px;
+  border: 1px solid rgba(51, 51, 51, 0.1);
+  box-shadow: 0px 0px 10px rgba(51, 51, 51, 0.1);
 }
 
 /* 宽高 */
 @mixin wh(
   $width: 100%,
-  $height: 100%,
-  $maxW: null,
-  $maxH: null,
-  $minW: null,
-  $minH: null
+  $height: auto,
+  $max-width: none,
+  $max-height: none,
+  $min-width: none,
+  $min-height: none
 ) {
   width: $width;
   height: $height;
-  max-width: $maxW;
-  max-height: $maxH;
-  min-width: $minW;
-  min-height: $minH;
+
+  @if $max-width != none {
+    max-width: $max-width;
+  }
+  @if $max-height != none {
+    max-height: $max-height;
+  }
+  @if $min-width != none {
+    min-width: $min-width;
+  }
+  @if $min-height != none {
+    min-height: $min-height;
+  }
+}
+
+/* 100% 宽高 */
+@mixin full-wh {
+  width: 100%;
+  height: 100%;
 }
 
 /* grid 定位 */
-@mixin grid_config($columns: 4, $rows: 4, $c_gap: 0px, $r_gap: 0px) {
+@mixin grid-config(
+  $col: auto,
+  $rows: auto,
+  $gap: 0px,
+  $place-content: normal,
+  $place-items: normal
+) {
   display: grid;
-  grid-template-columns: repeat($columns, 1fr);
-  grid-template-rows: repeat($rows, 1fr);
-  grid-column-gap: $c_gap;
-  grid-row-gap: $r_gap;
+  grid-template-columns: $col;
+  grid-template-rows: $rows;
+  gap: $gap;
+  grid-gap: $gap;
+  place-content: $place-content;
+  place-items: $place-items;
 }
 
-/* 字体 */
-@mixin font_config($size: 16px, $color: rgba(51, 51, 51, 1)) {
+/* flex 布局 */
+@mixin flex-config(
+  $isrow: 0,
+  $layout: space-between,
+  $gap: 0px,
+  $wrap: nowrap
+) {
+  display: flex;
+  @if $isrow != 0 {
+    flex-flow: column $wrap;
+  } @else {
+    flex-flow: row $wrap;
+  }
+  gap: $gap;
+  flex-gap: $gap;
+  align-items: center;
+  justify-content: $layout;
+}
+
+@mixin font-config(
+  $size: $font-size-base,
+  $color: $color-base,
+  $weight: $font-weight-regular,
+  $line-height: 1.5,
+  $align: left
+) {
   font-size: $size;
   color: $color;
+  font-weight: $weight;
+  line-height: $line-height;
+  text-align: $align;
+
+  // 抗锯齿（移动端）
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* 决定定位 */
-@mixin pos_ab($data1: 0px, $data2: 0px, $reverse: 0) {
-  position: absolute;
+/**
+ * 文本截断（单行/多行）
+ * @param {Number} $lines - 行数，默认 1（单行）
+ */
+@mixin text-truncate($lines: 1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @if $lines > 1 {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+  }
+}
+
+/* 绝对定位 */
+@mixin pos-ab($data1: 0px, $data2: 0px, $reverse: 0, $pos: absolute) {
+  position: $pos;
   @if $reverse == 0 {
     top: $data1;
     left: $data2;
@@ -82,54 +215,40 @@
 }
 
 /* 固定中心定位 */
-@mixin fixed_center {
+@mixin fixed-center {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%); // 兼容
+  -ms-transform: translate(-50%, -50%); // IE 兼容
 }
 
 /* 绝对中心定位 */
-@mixin ab_center {
+@mixin ab-center {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%); // 兼容
+  -ms-transform: translate(-50%, -50%); // IE 兼容
 }
 
 /* flex 中心定位 */
-@mixin flex_center {
+@mixin flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
 }
 
-/* flex 布局 */
-@mixin flex_config($isrow: 0, $layout: space-between, $wrap: nowrap) {
-  display: flex;
-  @if $isrow != 0 {
-    flex-flow: column $wrap;
-  } @else {
-    flex-flow: row $wrap;
-  }
-  align-items: center;
-  justify-content: $layout;
-}
-
-/* 100% 宽高 */
-@mixin full_wh {
-  width: 100%;
-  height: 100%;
-}
-
 /* 样式配置 */
-@mixin style_common($radius: 12px, $bg: null, $border: null, $bs: null) {
+@mixin style-common($radius: 12px, $bg: null, $border: null, $bs: null) {
   border-radius: $radius;
   @if $bg != null {
     background: $bg;
   }
-  @if border != null {
+  @if $border != null {
     border: $border;
   }
   @if $bs != null {
@@ -138,7 +257,7 @@
 }
 
 /* 通用样式 */
-@mixin app_common {
+@mixin app-common {
   * {
     padding: 0;
     margin: 0;
@@ -156,9 +275,37 @@
     margin: 0;
     width: 100%;
     height: 100%;
-    font-family: 'ceyy';
-    background: rgba(0, 0, 0, 0);
+    font-family: $font-family-primary;
+    font-size: $font-size-base;
+    background-color: transparent;
+    // 禁止IOS横屏字体放大
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
   }
+
+  // 元素重置
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    outline: none;
+    // 去除移动端点击高亮
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    &:hover,
+    &:active {
+      text-decoration: none;
+    }
+  }
+
   a,
   input:focus,
   select:focus,
@@ -167,13 +314,19 @@
     outline: none;
   }
 
-  li {
-    list-style-type: none;
+  button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
   }
 
-  a {
-    text-decoration: none;
-    color: inherit;
+  li {
+    list-style: none;
+    list-style-type: none;
   }
 
   // 数字输入框去除上下箭头
@@ -183,8 +336,13 @@
   }
   input[type='number'] {
     -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  // 文本选中样式
+  ::selection {
+    // background-color: ;
+    // color: ;
   }
 }
 
-// 阴影
-$shadow1: 0px 2px 35px rgba(0, 0, 0, 0.07);
