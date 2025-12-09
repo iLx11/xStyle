@@ -1,0 +1,24 @@
+{
+  "name": "ilx1-x-style",
+  "version": "1.0.0",
+  "description": "x-style is a style library for x-style",
+  "files": [
+    "base/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iLx11/xStyle.git"
+  },
+  "keywords": [
+    "sass",
+    "scss",
+    "styles"
+  ],
+  "author": "iLx1",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/iLx11/xStyle/issues"
+  },
+  "homepage": "https://github.com/iLx11/xStyle#readme"
+}
