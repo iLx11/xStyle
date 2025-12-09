@@ -1,6 +1,6 @@
 {
   "name": "ilx1-x-style",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "x-style is a style library for x-style",
   "files": [
     "base/"
