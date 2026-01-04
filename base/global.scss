@@ -17,35 +17,31 @@ $z-index-2: 200;
 $z-index-3: 300;
 $z-index-4: 400;
 $z-index-5: 500;
+
 /**
  * 自定义滚动条（全浏览器兼容）
- * @param {Boolean} $show - 是否显示，默认 true
- * @param {Length} $width - 宽度，默认 $app-scrollbar-width
- * @param {Color} $track-color - 轨道颜色，默认 $app-scrollbar-track-color
- * @param {Color} $thumb-color - 滑块颜色，默认 $app-scrollbar-thumb-color
- * @param {Color} $thumb-hover-color - 滑块 hover 颜色，默认 $app-scrollbar-thumb-hover-color
- * @param {Length} $border-radius - 圆角，默认 $app-scrollbar-border-radius
+ * @param {Boolean} $show - 是否显示
+ * @param {Length} $width - 宽度
+ * @param {Color} $track-color - 轨道颜色
+ * @param {Color} $thumb-color - 滑块颜色
+ * @param {Color} $thumb-hover-color - 滑块 hover 颜色
+ * @param {Length} $border-radius - 圆角
  */
 @mixin custom-scrollbar(
   $show: true,
-  $width: $app-scrollbar-width,
-  $track-color: $app-scrollbar-track-color,
-  $thumb-color: $app-scrollbar-thumb-color,
-  $thumb-hover-color: $app-scrollbar-thumb-hover-color,
-  $border-radius: $app-scrollbar-border-radius
+  $width: 10px,
+  $track-color: rgba(51, 51, 51, 0.3),
+  $thumb-color: rgba(51, 51, 51, 0.5),
+  $thumb-hover-color: rgba(173, 173, 173, 0.8),
+  $border-radius: 12px
 ) {
   @if $show {
-    // Firefox
     scrollbar-width: thin;
     scrollbar-color: $thumb-color $track-color;
-
-    // IE/Edge
-    -ms-overflow-style: auto;
 
     // Webkit 内核（Chrome/Safari）
     &::-webkit-scrollbar {
       width: $width;
-      height: $width; // 横向滚动条宽度
       display: block;
     }
 
@@ -57,29 +53,15 @@ $z-index-5: 500;
     &::-webkit-scrollbar-thumb {
       background: $thumb-color;
       border-radius: $border-radius;
-      border: 2px solid transparent; // 增加内边距，更美观
-      background-clip: content-box;
-
-      // hover 效果
-      &:hover {
-        background: $thumb-hover-color;
-        background-clip: content-box;
-      }
-
-      // active 效果
-      &:active {
-        background: darken($thumb-hover-color, 5%);
-        background-clip: content-box;
-      }
     }
 
-    // 滚动条角落
-    &::-webkit-scrollbar-corner {
-      background: $track-color;
+    &::-webkit-scrollbar-thumb:hover {
+      background: $thumb-hover-color;
     }
   } @else {
     // 隐藏滚动条
     scrollbar-width: none;
+
     -ms-overflow-style: none;
     &::-webkit-scrollbar {
       display: none;
